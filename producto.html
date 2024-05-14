@@ -13,32 +13,33 @@
         <input type="text" id="descripcion" placeholder="INSERTA LA DESCRIPCIÓN DEL PRODUCTO">
         <button type="submit">Agregar producto</button>
     </form>
+    <script>
 
-        <script>
-
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "firebase/app";
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "firebase/app";
+        
     
-
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyAiJfuOfPDbFxCK85-FN2TrnLzxxA3r_qQ",
+          authDomain: "cliente-16d52.firebaseapp.com",
+          projectId: "cliente-16d52",
+          storageBucket: "cliente-16d52.appspot.com",
+          messagingSenderId: "1060037759880",
+          appId: "1:1060037759880:web:27ce1751f633117974a03d"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        import{getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyAiJfuOfPDbFxCK85-FN2TrnLzxxA3r_qQ",
-      authDomain: "cliente-16d52.firebaseapp.com",
-      projectId: "cliente-16d52",
-      storageBucket: "cliente-16d52.appspot.com",
-      messagingSenderId: "1060037759880",
-      appId: "1:1060037759880:web:27ce1751f633117974a03d"
-    };
     
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    import{getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-
-</script>
+    </script>
 
 </body>
+
+
 </html>
