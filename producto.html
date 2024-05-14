@@ -16,7 +16,7 @@
     <br>
     
     <h1>Insertar producto</h1>
-    <form action="INSERT">
+    <form id="form-product">
         <input type="text" id="nombre" placeholder="INSERTA EL NOMBRE DEL PRODUCTO">
         <input type="text" id="precio" placeholder="INSERTA EL PRECIO DEL PRODUCTO">
         <input type="text" id="descripcion" placeholder="INSERTA LA DESCRIPCIÓN DEL PRODUCTO">
@@ -26,6 +26,9 @@
 
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "firebase/app";
+        import{getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc} 
+        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
         
     
         // TODO: Add SDKs for Firebase products that you want to use
@@ -43,12 +46,25 @@
         
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        import{getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-    
-    
+        const db = getFirestore(app); /*clases form id="product*/
+
+        const productform = document.getElementById("form-product")
+        productform.addEventListener("submit",async(e)=>{
+            e.preventDefault();
+            await addDoc(collection(db,"producto"), {
+                nombre: productform.nombre.value, 
+                precio: productform.precio.value,
+                descripcion: productform.descripcion.value,
+
+            }); /*añadir un documento*/
+
+            productform.reset();
+        }); /*accion o evento*- /
+        
+
+
     </script>
 
 </body>
-
 
 </html>
