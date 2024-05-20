@@ -1,108 +1,148 @@
+Claro, aquí tienes el código HTML completo modificado para gestionar películas en lugar de mascotas:
+
+```html
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD Firebase</title>
+    <title>Firebase CRUD</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            padding: 20px;
         }
 
-        #movie-form {
+        form {
             margin-bottom: 20px;
         }
 
-        #movie-form input,
-        #movie-form textarea,
-        #movie-form button {
-            display: block;
-            margin: 10px 0;
+        input, button, textarea {
+            margin: 5px 0;
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        #movies-table {
-            margin-top: 20px;
+        button {
+            cursor: pointer;
+        }
+
+        table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        #movies-table th,
-        #movies-table td {
-            border: 1px solid #ccc;
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
             padding: 10px;
+            text-align: left;
         }
 
-        #movies-table th {
-            background-color: #f4f4f4;
+        th {
+            background-color: #f2f2f2;
         }
     </style>
-</head>
-
-<body>
-    <h1>CRUD Firebase</h1>
-    <div id="app">
-        <form id="movie-form">
-            <input type="text" id="id" placeholder="ID de la Película (solo para buscar)">
-            <input type="text" id="titulo" placeholder="Título" required>
-            <input type="text" id="director" placeholder="Director" required>
-            <input type="number" id="año_estreno" placeholder="Año de Estreno" required>
-            <input type="text" id="genero" placeholder="Género" required>
-            <input type="number" id="duracion_minutos" placeholder="Duración en Minutos" required>
-            <input type="text" id="idioma_original" placeholder="Idioma Original" required>
-            <input type="text" id="pais_produccion" placeholder="País de Producción" required>
-            <input type="number" step="0.1" id="calificacion_IMDB" placeholder="Calificación IMDb" required>
-            <textarea id="sinopsis" placeholder="Sinopsis" required></textarea>
-            <button type="button" id="add-btn">Agregar Película</button>
-            <button type="button" id="update-btn">Actualizar Película</button>
-            <button type="button" id="delete-btn">Eliminar Película</button>
-            <button type="button" id="search-btn">Buscar Película</button>
-        </form>
-        <table id="movies-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Director</th>
-                    <th>Año</th>
-                    <th>Género</th>
-                    <th>Duración</th>
-                    <th>Idioma</th>
-                    <th>País</th>
-                    <th>Calificación</th>
-                    <th>Sinopsis</th>
-                </tr>
-            </thead>
-            <tbody id="movies-list"></tbody>
-        </table>
-    </div>
     <script type="module">
-        // Importar las funciones necesarias de los SDK que necesitas
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
-        // Configuración de Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyA_Jgd3iinbMYU2GTJfesdqI3s09uHfjWw",
-            authDomain: "peliculas-ae2f1.firebaseapp.com",
-            projectId: "peliculas-ae2f1",
-            storageBucket: "peliculas-ae2f1.appspot.com",
-            messagingSenderId: "854647408875",
-            appId: "1:854647408875:web:39489056b967ada8b316ae",
-            measurementId: "G-EK15PN80TF"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
         };
 
-        // Inicializar Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const peliculasCollection = collection(db, "peliculas");
 
-        // Referencia a la colección de películas
-        const moviesCollection = collection(db, 'peliculas');
+        async function createPelicula(data) {
+            try {
+                const docRef = await addDoc(peliculasCollection, data);
+                console.log("Document written with ID: ", docRef.id);
+                await getPeliculas();
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+        }
 
-        // Función para agregar una película
-        document.getElementById('add-btn').addEventListener('click', async () => {
-            const movieData = {
+        async function updatePelicula(id, updatedData) {
+            const peliculaDoc = doc(db, "peliculas", id);
+            await updateDoc(peliculaDoc, updatedData);
+            console.log("Document updated with ID: ", id);
+            await getPeliculas();
+        }
+
+        async function deletePelicula(id) {
+            const peliculaDoc = doc(db, "peliculas", id);
+            await deleteDoc(peliculaDoc);
+            console.log("Document deleted with ID: ", id);
+            await getPeliculas();
+        }
+
+        async function getPeliculas() {
+            const querySnapshot = await getDocs(peliculasCollection);
+            const tableBody = document.getElementById('tablaPeliculasBody');
+            tableBody.innerHTML = '';
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const row = `
+                    <tr>
+                        <td>${doc.id}</td>
+                        <td>${data.titulo}</td>
+                        <td>${data.director}</td>
+                        <td>${data.año_estreno}</td>
+                        <td>${data.genero}</td>
+                        <td>${data.duracion_minutos}</td>
+                        <td>${data.idioma_original}</td>
+                        <td>${data.pais_produccion}</td>
+                        <td>${data.calificacion_IMDB}</td>
+                        <td>${data.sinopsis}</td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+
+        async function searchPeliculaById(id) {
+            const peliculaDoc = doc(peliculasCollection, id);
+            const docSnap = await getDoc(peliculaDoc);
+            if (docSnap.exists()) {
+                fillFormWithPeliculaData(docSnap.id, docSnap.data());
+            } else {
+                console.log("No such document!");
+                document.getElementById('peliculaForm').reset();
+            }
+        }
+
+        function fillFormWithPeliculaData(id, data) {
+            document.getElementById('buscarId').value = id;
+            document.getElementById('titulo').value = data.titulo;
+            document.getElementById('director').value = data.director;
+            document.getElementById('año_estreno').value = data.año_estreno;
+            document.getElementById('genero').value = data.genero;
+            document.getElementById('duracion_minutos').value = data.duracion_minutos;
+            document.getElementById('idioma_original').value = data.idioma_original;
+            document.getElementById('pais_produccion').value = data.pais_produccion;
+            document.getElementById('calificacion_IMDB').value = data.calificacion_IMDB;
+            document.getElementById('sinopsis').value = data.sinopsis;
+        }
+
+        document.getElementById('insertarBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const data = {
                 titulo: document.getElementById('titulo').value,
                 director: document.getElementById('director').value,
                 año_estreno: parseInt(document.getElementById('año_estreno').value),
@@ -113,22 +153,92 @@
                 calificacion_IMDB: parseFloat(document.getElementById('calificacion_IMDB').value),
                 sinopsis: document.getElementById('sinopsis').value
             };
-
-            await addDoc(moviesCollection, movieData);
-            document.getElementById('movie-form').reset();
-            loadMovies(); // Llamar a la función loadMovies() para actualizar la lista de películas
+            await createPelicula(data);
+            document.getElementById('peliculaForm').reset();
         });
 
-        // Función para cargar películas desde Firestore
-        async function loadMovies() {
-            // Implementa la lógica para cargar las películas desde Firestore
-        }
+        document.getElementById('editarBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('buscarId').value;
+            const updatedData = {
+                titulo: document.getElementById('titulo').value,
+                director: document.getElementById('director').value,
+                año_estreno: parseInt(document.getElementById('año_estreno').value),
+                genero: document.getElementById('genero').value,
+                duracion_minutos: parseInt(document.getElementById('duracion_minutos').value),
+                idioma_original: document.getElementById('idioma_original').value,
+                pais_produccion: document.getElementById('pais_produccion').value,
+                calificacion_IMDB: parseFloat(document.getElementById('calificacion_IMDB').value),
+                sinopsis: document.getElementById('sinopsis').value
+            };
+            await updatePelicula(id, updatedData);
+            document.getElementById('peliculaForm').reset();
+        });
 
-        // Llamar a loadMovies() al cargar la página
-        window.onload = () => {
-            loadMovies();
-        };
+        document.getElementById('borrarBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('buscarId').value;
+            await deletePelicula(id);
+            document.getElementById('peliculaForm').reset();
+        });
+
+        document.getElementById('buscarForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('buscarId').value;
+            if (id) {
+                await searchPeliculaById(id);
+            } else {
+                console.log("Please enter ID to search");
+            }
+        });
+
+        window.onload = getPeliculas;
     </script>
+</head>
+
+<body>
+    <h1>Firebase CRUD</h1>
+
+    <h2>Buscar Película</h2>
+    <form id="buscarForm">
+        <input type="text" id="buscarId" placeholder="ID de la Película" required>
+        <button type="submit">Buscar</button>
+    </form>
+
+    <h2>Gestionar Película</h2>
+    <form id="peliculaForm">
+        <input type="text" id="titulo" placeholder="Título" required>
+        <input type="text" id="director" placeholder="Director" required>
+        <input type="number" id="año_estreno" placeholder="Año de Estreno" required>
+        <input type="text" id="genero" placeholder="Género" required>
+        <input type="number" id="duracion_minutos" placeholder="Duración en Minutos" required>
+        <input type="text" id="idioma_original" placeholder="Idioma Original" required>
+        <input type="text" id="pais_produccion" placeholder="País de Producción" required>
+        <input type="number" step="0.1" id="calificacion_IMDB" placeholder="Calificación IMDB" required>
+        <textarea id="sinopsis" placeholder="Sinopsis" required></textarea>
+        <button id="insertarBtn">Insertar</button>
+        <button id="editarBtn">Editar</button>
+        <button id="borrarBtn">Borrar</button>
+    </form>
+
+    <h2>Lista de Películas</h2>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Director</th>
+            <th>Año de Estreno</th>
+            <th>Género</th>
+            <th>Duración en Minutos</th>
+            <th>Idioma Original</th>
+            <th>País de Producción</th>
+            <th>Calificación IMDB</th>
+            <th>Sinopsis</th>
+        </tr>
+    </thead>
+    <tbody id="tablaPeliculasBody"></tbody>
+</table>
+
 </body>
 
 </html>
