@@ -17,7 +17,8 @@
         }
 
         input,
-        button {
+        button,
+        textarea {
             margin: 5px 0;
             padding: 10px;
             font-size: 16px;
@@ -48,12 +49,12 @@
         th {
             background-color: #f2f2f2;
         }
-        body{
+
+        body {
             border: black solid 2px;
             width: 100%;
             background-color: rgb(151, 229, 232);
         }
-
     </style>
 
     <script type="module">
@@ -105,7 +106,7 @@
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 const row = `
-                    <tr>
+                    <tr data-id="${doc.id}">
                         <td>${doc.id}</td>
                         <td>${data.titulo}</td>
                         <td>${data.director}</td>
@@ -120,10 +121,18 @@
                 `;
                 tableBody.insertAdjacentHTML('beforeend', row);
             });
+
+            // Add click event listener to each row
+            document.querySelectorAll('#tablaPeliculasBody tr').forEach(row => {
+                row.addEventListener('click', () => {
+                    const id = row.getAttribute('data-id');
+                    searchPeliculaById(id);
+                });
+            });
         }
 
         async function searchPeliculaById(id) {
-            const peliculaDoc = doc(peliculasCollection, id);
+            const peliculaDoc = doc(db, "peliculas", id);
             const docSnap = await getDoc(peliculaDoc);
             if (docSnap.exists()) {
                 fillFormWithPeliculaData(docSnap.id, docSnap.data());
