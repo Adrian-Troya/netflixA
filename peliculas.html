@@ -19,7 +19,9 @@ Claro, aquí tienes el código HTML completo modificado para gestionar película
             margin-bottom: 20px;
         }
 
-        input, button, textarea {
+        input,
+        button,
+        textarea {
             margin: 5px 0;
             padding: 10px;
             font-size: 16px;
@@ -37,11 +39,14 @@ Claro, aquí tienes el código HTML completo modificado para gestionar película
             margin-top: 20px;
         }
 
-        table, th, td {
+        table,
+        th,
+        td {
             border: 1px solid black;
         }
 
-        th, td {
+        th,
+        td {
             padding: 10px;
             text-align: left;
         }
@@ -55,13 +60,13 @@ Claro, aquí tienes el código HTML completo modificado para gestionar película
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID",
-            measurementId: "YOUR_MEASUREMENT_ID"
+            apiKey: "AIzaSyA_Jgd3iinbMYU2GTJfesdqI3s09uHfjWw",
+            authDomain: "peliculas-ae2f1.firebaseapp.com",
+            projectId: "peliculas-ae2f1",
+            storageBucket: "peliculas-ae2f1.appspot.com",
+            messagingSenderId: "854647408875",
+            appId: "1:854647408875:web:39489056b967ada8b316ae",
+            measurementId: "G-EK15PN80TF"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -237,7 +242,7 @@ Claro, aquí tienes el código HTML completo modificado para gestionar película
         </tr>
     </thead>
     <tbody id="tablaPeliculasBody"></tbody>
-</table>
+    </table>
 
 </body>
 
