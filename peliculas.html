@@ -19,14 +19,19 @@
             margin: 10px 0;
         }
 
-        #movies-list {
+        #movies-table {
             margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .movie-item {
-            margin-bottom: 10px;
-            padding: 10px;
+        #movies-table th, #movies-table td {
             border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        #movies-table th {
+            background-color: #f4f4f4;
         }
     </style>
 </head>
@@ -34,7 +39,7 @@
     <h1>CRUD Firebase</h1>
     <div id="app">
         <form id="movie-form">
-            <input type="text" id="id" placeholder="ID de la Película (solo para buscar)" required>
+            <input type="text" id="id" placeholder="ID de la Película (solo para buscar)">
             <input type="text" id="titulo" placeholder="Título" required>
             <input type="text" id="director" placeholder="Director" required>
             <input type="number" id="año_estreno" placeholder="Año de Estreno" required>
@@ -49,7 +54,23 @@
             <button type="button" id="delete-btn">Eliminar Película</button>
             <button type="button" id="search-btn">Buscar Película</button>
         </form>
-        <div id="movies-list"></div>
+        <table id="movies-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Director</th>
+                    <th>Año</th>
+                    <th>Género</th>
+                    <th>Duración</th>
+                    <th>Idioma</th>
+                    <th>País</th>
+                    <th>Calificación</th>
+                    <th>Sinopsis</th>
+                </tr>
+            </thead>
+            <tbody id="movies-list"></tbody>
+        </table>
     </div>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
@@ -87,6 +108,7 @@
 
             await moviesCollection.add(movieData);
             document.getElementById('movie-form').reset();
+            loadMovies();
         });
 
         // Función para actualizar una película
@@ -107,6 +129,7 @@
 
                 await moviesCollection.doc(id).set(movieData);
                 document.getElementById('movie-form').reset();
+                loadMovies();
             }
         });
 
@@ -116,6 +139,7 @@
             if (id) {
                 await moviesCollection.doc(id).delete();
                 document.getElementById('movie-form').reset();
+                loadMovies();
             }
         });
 
@@ -142,27 +166,32 @@
         });
 
         // Leer y mostrar las películas
-        const moviesList = document.getElementById('movies-list');
-        moviesCollection.onSnapshot((snapshot) => {
-            moviesList.innerHTML = '';
-            snapshot.forEach((doc) => {
-                const movie = doc.data();
-                moviesList.innerHTML += `
-                    <div class="movie-item">
-                        <h3>${movie.titulo}</h3>
-                        <p><strong>ID:</strong> ${doc.id}</p>
-                        <p><strong>Director:</strong> ${movie.director}</p>
-                        <p><strong>Año de Estreno:</strong> ${movie.año_estreno}</p>
-                        <p><strong>Género:</strong> ${movie.genero}</p>
-                        <p><strong>Duración:</strong> ${movie.duracion_minutos} minutos</p>
-                        <p><strong>Idioma Original:</strong> ${movie.idioma_original}</p>
-                        <p><strong>País de Producción:</strong> ${movie.pais_produccion}</p>
-                        <p><strong>Calificación IMDb:</strong> ${movie.calificacion_IMDB}</p>
-                        <p><strong>Sinopsis:</strong> ${movie.sinopsis}</p>
-                    </div>
-                `;
+        const loadMovies = () => {
+            moviesCollection.onSnapshot((snapshot) => {
+                const moviesList = document.getElementById('movies-list');
+                moviesList.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const movie = doc.data();
+                    moviesList.innerHTML += `
+                        <tr>
+                            <td>${doc.id}</td>
+                            <td>${movie.titulo}</td>
+                            <td>${movie.director}</td>
+                            <td>${movie.año_estreno}</td>
+                            <td>${movie.genero}</td>
+                            <td>${movie.duracion_minutos}</td>
+                            <td>${movie.idioma_original}</td>
+                            <td>${movie.pais_produccion}</td>
+                            <td>${movie.calificacion_IMDB}</td>
+                            <td>${movie.sinopsis}</td>
+                        </tr>
+                    `;
+                });
             });
-        });
+        };
+
+        // Cargar películas al cargar la página
+        loadMovies();
     </script>
 </body>
 </html>
