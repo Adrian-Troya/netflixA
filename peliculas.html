@@ -116,12 +116,12 @@
 
             await addDoc(moviesCollection, movieData);
             document.getElementById('movie-form').reset();
-            loadMovies();
+            loadMovies(); // Llamar a la función loadMovies() para actualizar la lista de películas
         });
 
-        // Función para cargar películas
-        function loadMovies() {
-            // Aquí puedes implementar la lógica para cargar las películas desde Firebase
+        // Función para cargar películas desde Firestore
+        async function loadMovies() {
+            // Implementa la lógica para cargar las películas desde Firestore
         }
 
         // Llamar a loadMovies() al cargar la página
