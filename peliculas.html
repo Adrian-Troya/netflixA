@@ -77,17 +77,17 @@
     <script>
         // Configurar Firebase
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_DOMINIO_AUTH",
+            projectId: "TU_ID_PROYECTO",
+            storageBucket: "TU_STORAGE_BUCKET",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
         };
 
         // Inicializar Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore(app);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
         // Referencia a la colección de películas
         const moviesCollection = db.collection('peliculas');
@@ -111,87 +111,15 @@
             loadMovies();
         });
 
-        // Función para actualizar una película
-        document.getElementById('update-btn').addEventListener('click', async () => {
-            const id = document.getElementById('id').value;
-            if (id) {
-                const movieData = {
-                    titulo: document.getElementById('titulo').value,
-                    director: document.getElementById('director').value,
-                    año_estreno: parseInt(document.getElementById('año_estreno').value),
-                    genero: document.getElementById('genero').value,
-                    duracion_minutos: parseInt(document.getElementById('duracion_minutos').value),
-                    idioma_original: document.getElementById('idioma_original').value,
-                    pais_produccion: document.getElementById('pais_produccion').value,
-                    calificacion_IMDB: parseFloat(document.getElementById('calificacion_IMDB').value),
-                    sinopsis: document.getElementById('sinopsis').value
-                };
+        // Función para cargar películas
+        function loadMovies() {
+            // Aquí puedes implementar la lógica para cargar las películas desde Firebase
+        }
 
-                await moviesCollection.doc(id).set(movieData);
-                document.getElementById('movie-form').reset();
-                loadMovies();
-            }
-        });
-
-        // Función para eliminar una película
-        document.getElementById('delete-btn').addEventListener('click', async () => {
-            const id = document.getElementById('id').value;
-            if (id) {
-                await moviesCollection.doc(id).delete();
-                document.getElementById('movie-form').reset();
-                loadMovies();
-            }
-        });
-
-        // Función para buscar una película por ID y rellenar los campos del formulario
-        document.getElementById('search-btn').addEventListener('click', async () => {
-            const id = document.getElementById('id').value;
-            if (id) {
-                const doc = await moviesCollection.doc(id).get();
-                if (doc.exists) {
-                    const movie = doc.data();
-                    document.getElementById('titulo').value = movie.titulo;
-                    document.getElementById('director').value = movie.director;
-                    document.getElementById('año_estreno').value = movie.año_estreno;
-                    document.getElementById('genero').value = movie.genero;
-                    document.getElementById('duracion_minutos').value = movie.duracion_minutos;
-                    document.getElementById('idioma_original').value = movie.idioma_original;
-                    document.getElementById('pais_produccion').value = movie.pais_produccion;
-                    document.getElementById('calificacion_IMDB').value = movie.calificacion_IMDB;
-                    document.getElementById('sinopsis').value = movie.sinopsis;
-                } else {
-                    alert("Película no encontrada");
-                }
-            }
-        });
-
-        // Leer y mostrar las películas
-        const loadMovies = () => {
-            moviesCollection.onSnapshot((snapshot) => {
-                const moviesList = document.getElementById('movies-list');
-                moviesList.innerHTML = '';
-                snapshot.forEach((doc) => {
-                    const movie = doc.data();
-                    moviesList.innerHTML += `
-                        <tr>
-                            <td>${doc.id}</td>
-                            <td>${movie.titulo}</td>
-                            <td>${movie.director}</td>
-                            <td>${movie.año_estreno}</td>
-                            <td>${movie.genero}</td>
-                            <td>${movie.duracion_minutos}</td>
-                            <td>${movie.idioma_original}</td>
-                            <td>${movie.pais_produccion}</td>
-                            <td>${movie.calificacion_IMDB}</td>
-                            <td>${movie.sinopsis}</td>
-                        </tr>
-                    `;
-                });
-            });
+        // Llamar a loadMovies() al cargar la página
+        window.onload = () => {
+            loadMovies();
         };
-
-        // Cargar películas al cargar la página
-        loadMovies();
     </script>
 </body>
 </html>
