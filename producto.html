@@ -11,29 +11,25 @@
         <a href="index.html">Inicio</a>
         <a href="conexion1.html">Página 1</a>
         <a href="cone.html">Página 2</a>
-        <a href="producto.html">Página 3</a>
+        <a href="producto.html">PRODUCTO</p></a>
     </nav>
     <br>
     
     <h1>Insertar producto</h1>
     <form id="form-product">
         <input type="text" id="nombre" placeholder="INSERTA EL NOMBRE DEL PRODUCTO">
-        <input type="text" id="precio" placeholder="INSERTA EL PRECIO DEL PRODUCTO">
-        <input type="text" id="descripcion" placeholder="INSERTA LA DESCRIPCIÓN DEL PRODUCTO">
+        <input type="number" id="precio" placeholder="INSERTA EL PRECIO DEL PRODUCTO">
+        <input type="text" id="codigo" placeholder="INSERTA LA DESCRIPCIÓN DEL PRODUCTO">
         <button type="submit">Agregar producto</button>
     </form>
-    <script>
-
+    <script type="module">
         // Import the functions you need from the SDKs you need
-        import { initializeApp } from "firebase/app";
-        import{getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc} 
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import {getFirestore,collection,addDoc,onSnapshot,deleteDoc,doc}
         from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-        
-    
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
-        
+      
         // Your web app's Firebase configuration
         const firebaseConfig = {
           apiKey: "AIzaSyAiJfuOfPDbFxCK85-FN2TrnLzxxA3r_qQ",
@@ -41,30 +37,14 @@
           projectId: "cliente-16d52",
           storageBucket: "cliente-16d52.appspot.com",
           messagingSenderId: "1060037759880",
-          appId: "1:1060037759880:web:27ce1751f633117974a03d"
+          appId: "1:1060037759880:web:d0c6a10fe3fba5d174a03d"
         };
-        
+      
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app); /*clases form id="product*/
+      </script>
 
-        const productform = document.getElementById("form-product")
-        productform.addEventListener("submit",async(e)=>{
-            e.preventDefault();
-            await addDoc(collection(db,"producto"), {
-                nombre: productform.nombre.value, 
-                precio: productform.precio.value,
-                descripcion: productform.descripcion.value,
-
-            }); /*añadir un documento*/
-
-            productform.reset();
-        }); /*accion o evento*- /
-        
-
-
-    </script>
-
-</body>
+    </body>
 
 </html>
+

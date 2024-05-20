@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD PELÍCULAS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #movie-form {
+            margin-bottom: 20px;
+        }
+
+        #movie-form input,
+        #movie-form textarea,
+        #movie-form button {
+            display: block;
+            margin: 10px 0;
+        }
+
+        #movies-list {
+            margin-top: 20px;
+        }
+
+        .movie-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>CRUD PELÍCULAS</h1>
+    <div id="app">
+        <form id="movie-form">
+            <input type="text" id="titulo" placeholder="Título" required>
+            <input type="text" id="director" placeholder="Director" required>
+            <input type="number" id="año_estreno" placeholder="Año de Estreno" required>
+            <input type="text" id="genero" placeholder="Género" required>
+            <input type="number" id="duracion_minutos" placeholder="Duración en Minutos" required>
+            <input type="text" id="idioma_original" placeholder="Idioma Original" required>
+            <input type="text" id="pais_produccion" placeholder="País de Producción" required>
+            <input type="number" step="0.1" id="calificacion_IMDB" placeholder="Calificación IMDb" required>
+            <textarea id="sinopsis" placeholder="Sinopsis" required></textarea>
+            <button type="submit">Agregar Película</button>
+        </form>
+        <div id="movies-list"></div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script>
+        // Configurar Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyA_Jgd3iinbMYU2GTJfesdqI3s09uHfjWw",
+            authDomain: "peliculas-ae2f1.firebaseapp.com",
+            projectId: "peliculas-ae2f1",
+            storageBucket: "peliculas-ae2f1.appspot.com",
+            messagingSenderId: "854647408875",
+            appId: "1:854647408875:web:39489056b967ada8b316ae",
+            measurementId: "G-EK15PN80TF"
+        };
+
+        // Inicializar Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(app);
+
+        // Referencia a la colección de películas
+        const moviesCollection = db.collection('peliculas');
+
+        // Agregar una nueva película
+        const movieForm = document.getElementById('movie-form');
+        movieForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await moviesCollection.add({
+                titulo: movieForm.titulo.value,
+                director: movieForm.director.value,
+                año_estreno: parseInt(movieForm.año_estreno.value),
+                genero: movieForm.genero.value,
+                duracion_minutos: parseInt(movieForm.duracion_minutos.value),
+                idioma_original: movieForm.idioma_original.value,
+                pais_produccion: movieForm.pais_produccion.value,
+                calificacion_IMDB: parseFloat(movieForm.calificacion_IMDB.value),
+                sinopsis: movieForm.sinopsis.value
+            });
+            movieForm.reset();
+        });
+
+        // Leer y mostrar las películas
+        const moviesList = document.getElementById('movies-list');
+        moviesCollection.onSnapshot((snapshot) => {
+            moviesList.innerHTML = '';
+            snapshot.forEach((doc) => {
+                const movie = doc.data();
+                moviesList.innerHTML += `
+                    <div class="movie-item">
+                        <h3>${movie.titulo}</h3>
+                        <p><strong>Director:</strong> ${movie.director}</p>
+                        <p><strong>Año de Estreno:</strong> ${movie.año_estreno}</p>
+                        <p><strong>Género:</strong> ${movie.genero}</p>
+                        <p><strong>Duración:</strong> ${movie.duracion_minutos} minutos</p>
+                        <p><strong>Idioma Original:</strong> ${movie.idioma_original}</p>
+                        <p><strong>País de Producción:</strong> ${movie.pais_produccion}</p>
+                        <p><strong>Calificación IMDb:</strong> ${movie.calificacion_IMDB}</p>
+                        <p><strong>Sinopsis:</strong> ${movie.sinopsis}</p>
+                        <button onclick="deleteMovie('${doc.id}')">Eliminar</button>
+                        <button onclick="editMovie('${doc.id}', '${movie.titulo}', '${movie.director}', '${movie.año_estreno}', '${movie.genero}', '${movie.duracion_minutos}', '${movie.idioma_original}', '${movie.pais_produccion}', '${movie.calificacion_IMDB}', '${movie.sinopsis}')">Editar</button>
+                    </div>
+                `;
+            });
+        });
+
+        // Eliminar una película
+        window.deleteMovie = async (id) => {
+            await moviesCollection.doc(id).delete();
+        };
+
+        // Editar una película
+        window.editMovie = (id, titulo, director, año_estreno, genero, duracion_minutos, idioma_original, pais_produccion, calificacion_IMDB, sinopsis) => {
+            movieForm.titulo.value = titulo;
+            movieForm.director.value = director;
+            movieForm.año_estreno.value = año_estreno;
+            movieForm.genero.value = genero;
+            movieForm.duracion_minutos.value = duracion_minutos;
+            movieForm.idioma_original.value = idioma_original;
+            movieForm.pais_produccion.value = pais_produccion;
+            movieForm.calificacion_IMDB.value = calificacion_IMDB;
+            movieForm.sinopsis.value = sinopsis;
+            movieForm.onsubmit = async (e) => {
+                e.preventDefault();
+                await moviesCollection.doc(id).update({
+                    titulo: movieForm.titulo.value,
+                    director: movieForm.director.value,
+                    año_estreno: parseInt(movieForm.año_estreno.value),
+                    genero: movieForm.genero.value,
+                    duracion_minutos: parseInt(movieForm.duracion_minutos.value),
+                    idioma_original: movieForm.idioma_original.value,
+                    pais_produccion: movieForm.pais_produccion.value,
+                    calificacion_IMDB: parseFloat(movieForm.calificacion_IMDB.value),
+                    sinopsis: movieForm.sinopsis.value
+                });
+                movieForm.reset();
+                movieForm.onsubmit = addMovie;
+            };
+        };
+
+        // Añadir una nueva película (callback original)
+        const addMovie = movieForm.onsubmit;
+    </script>
+</body>
+
+</html>
