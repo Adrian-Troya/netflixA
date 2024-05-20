@@ -50,6 +50,10 @@
             background-color: #f2f2f2;
         }
 
+        tbody tr:hover {
+            background-color: yellow;
+        }
+
         body {
             border: black solid 2px;
             width: 100%;
@@ -58,11 +62,13 @@
     </style>
 
     <script type="module">
+        // Importamos las funciones necesarias de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
+        // Configuración de Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyA_Jgd3iinbMYU2GTJfesdqI3s09uHfjWw",
+            apiKey: "API_KEY_HERE",
             authDomain: "peliculas-ae2f1.firebaseapp.com",
             projectId: "peliculas-ae2f1",
             storageBucket: "peliculas-ae2f1.appspot.com",
@@ -71,38 +77,43 @@
             measurementId: "G-EK15PN80TF"
         };
 
+        // Inicializamos Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const peliculasCollection = collection(db, "peliculas");
 
+        // Función para crear una nueva película en la colección
         async function createPelicula(data) {
             try {
                 const docRef = await addDoc(peliculasCollection, data);
                 console.log("Document written with ID: ", docRef.id);
-                await getPeliculas();
+                await getPeliculas(); // Actualizamos la lista de películas
             } catch (e) {
                 console.error("Error adding document: ", e);
             }
         }
 
+        // Función para actualizar una película existente
         async function updatePelicula(id, updatedData) {
             const peliculaDoc = doc(db, "peliculas", id);
             await updateDoc(peliculaDoc, updatedData);
             console.log("Document updated with ID: ", id);
-            await getPeliculas();
+            await getPeliculas(); // Actualizamos la lista de películas
         }
 
+        // Función para borrar una película de la colección
         async function deletePelicula(id) {
             const peliculaDoc = doc(db, "peliculas", id);
             await deleteDoc(peliculaDoc);
             console.log("Document deleted with ID: ", id);
-            await getPeliculas();
+            await getPeliculas(); // Actualizamos la lista de películas
         }
 
+        // Función para obtener y mostrar todas las películas
         async function getPeliculas() {
             const querySnapshot = await getDocs(peliculasCollection);
             const tableBody = document.getElementById('tablaPeliculasBody');
-            tableBody.innerHTML = '';
+            tableBody.innerHTML = ''; // Limpiamos el contenido del cuerpo de la tabla
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 const row = `
@@ -122,7 +133,7 @@
                 tableBody.insertAdjacentHTML('beforeend', row);
             });
 
-            // Add click event listener to each row
+            // Añadimos un evento de clic a cada fila para buscar y llenar el formulario con los datos de la película seleccionada
             document.querySelectorAll('#tablaPeliculasBody tr').forEach(row => {
                 row.addEventListener('click', () => {
                     const id = row.getAttribute('data-id');
@@ -131,6 +142,7 @@
             });
         }
 
+        // Función para buscar una película por ID y llenar el formulario con sus datos
         async function searchPeliculaById(id) {
             const peliculaDoc = doc(db, "peliculas", id);
             const docSnap = await getDoc(peliculaDoc);
@@ -142,6 +154,7 @@
             }
         }
 
+        // Función para llenar el formulario con los datos de una película
         function fillFormWithPeliculaData(id, data) {
             document.getElementById('buscarId').value = id;
             document.getElementById('titulo').value = data.titulo;
@@ -155,6 +168,7 @@
             document.getElementById('sinopsis').value = data.sinopsis;
         }
 
+        // Evento para manejar la inserción de una nueva película
         document.getElementById('insertarBtn').addEventListener('click', async (e) => {
             e.preventDefault();
             const data = {
@@ -172,6 +186,7 @@
             document.getElementById('peliculaForm').reset();
         });
 
+        // Evento para manejar la actualización de una película existente
         document.getElementById('editarBtn').addEventListener('click', async (e) => {
             e.preventDefault();
             const id = document.getElementById('buscarId').value;
@@ -190,6 +205,7 @@
             document.getElementById('peliculaForm').reset();
         });
 
+        // Evento para manejar el borrado de una película
         document.getElementById('borrarBtn').addEventListener('click', async (e) => {
             e.preventDefault();
             const id = document.getElementById('buscarId').value;
@@ -197,6 +213,7 @@
             document.getElementById('peliculaForm').reset();
         });
 
+        // Evento para manejar la búsqueda de una película por ID
         document.getElementById('buscarForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('buscarId').value;
@@ -207,6 +224,7 @@
             }
         });
 
+        // Cargar la lista de películas cuando se carga la página
         window.onload = getPeliculas;
     </script>
 </head>
