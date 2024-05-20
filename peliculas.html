@@ -78,13 +78,11 @@
         </table>
     </div>
     <script type="module">
-        // Import the functions you need from the SDKs you need
-
+        // Importar las funciones necesarias de los SDK que necesitas
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc } 
-        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-
+        // Configuración de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyA_Jgd3iinbMYU2GTJfesdqI3s09uHfjWw",
             authDomain: "peliculas-ae2f1.firebaseapp.com",
@@ -96,11 +94,11 @@
         };
 
         // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
         // Referencia a la colección de películas
-        const moviesCollection = db.collection('peliculas');
+        const moviesCollection = collection(db, 'peliculas');
 
         // Función para agregar una película
         document.getElementById('add-btn').addEventListener('click', async () => {
@@ -116,7 +114,7 @@
                 sinopsis: document.getElementById('sinopsis').value
             };
 
-            await moviesCollection.add(movieData);
+            await addDoc(moviesCollection, movieData);
             document.getElementById('movie-form').reset();
             loadMovies();
         });
