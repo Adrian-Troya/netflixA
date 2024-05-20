@@ -48,7 +48,13 @@
         th {
             background-color: #f2f2f2;
         }
+        body{
+            border: black solid 2px;
+            width: 100%;
+        }
+
     </style>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
@@ -233,9 +239,10 @@
         <br>
         <label for="">Sinopsis: </label>
         <textarea id="sinopsis" placeholder="Sinopsis" required></textarea>
-        <button id="insertarBtn">Insertar</button>
-        <button id="editarBtn">Editar</button>
-        <button id="borrarBtn">Borrar</button>
+        <br>
+        <button style="background-color: greenyellow; color: black;" id="insertarBtn">Insertar</button>
+        <button style="background-color: orange; color: black;" id="editarBtn">Editar</button>
+        <button style="background-color: red; color: black;" id="borrarBtn">Borrar</button>
     </form>
 
     <h2>Lista de Películas</h2>
