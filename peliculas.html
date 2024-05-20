@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +15,9 @@
             margin-bottom: 20px;
         }
 
-        #movie-form input, #movie-form textarea, #movie-form button {
+        #movie-form input,
+        #movie-form textarea,
+        #movie-form button {
             display: block;
             margin: 10px 0;
         }
@@ -25,7 +28,8 @@
             border-collapse: collapse;
         }
 
-        #movies-table th, #movies-table td {
+        #movies-table th,
+        #movies-table td {
             border: 1px solid #ccc;
             padding: 10px;
         }
@@ -35,6 +39,7 @@
         }
     </style>
 </head>
+
 <body>
     <h1>CRUD Firebase</h1>
     <div id="app">
@@ -74,18 +79,18 @@
     </div>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc } 
-        from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc }
+            from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
-    <script/>
-        // Configurar Firebase
+        <script />
         const firebaseConfig = {
-            apiKey: "TU_API_KEY",
-            authDomain: "TU_DOMINIO_AUTH",
-            projectId: "TU_ID_PROYECTO",
-            storageBucket: "TU_STORAGE_BUCKET",
-            messagingSenderId: "TU_SENDER_ID",
-            appId: "TU_APP_ID"
+            apiKey: "AIzaSyA_Jgd3iinbMYU2GTJfesdqI3s09uHfjWw",
+            authDomain: "peliculas-ae2f1.firebaseapp.com",
+            projectId: "peliculas-ae2f1",
+            storageBucket: "peliculas-ae2f1.appspot.com",
+            messagingSenderId: "854647408875",
+            appId: "1:854647408875:web:39489056b967ada8b316ae",
+            measurementId: "G-EK15PN80TF"
         };
 
         // Inicializar Firebase
@@ -125,4 +130,5 @@
         };
     </script>
 </body>
+
 </html>
