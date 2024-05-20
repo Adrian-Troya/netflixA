@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firebase CRUD</title>
+    <title>PELÍCULAS CRUD</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -206,14 +206,32 @@
 
     <h2>Gestionar Película</h2>
     <form id="peliculaForm">
+        <br>
+        <label for="">Título: </label>
         <input type="text" id="titulo" placeholder="Título" required>
+        <br>
+        <label for="">Director: </label>
         <input type="text" id="director" placeholder="Director" required>
+        <br>
+        <label for="">Año de Estreno: </label>
         <input type="number" id="año_estreno" placeholder="Año de Estreno" required>
+        <br>
+        <label for="">Género: </label>
         <input type="text" id="genero" placeholder="Género" required>
+        <br>
+        <label for="">Duración en Minutos: </label>
         <input type="number" id="duracion_minutos" placeholder="Duración en Minutos" required>
+        <br>
+        <label for="">Idioma Original: </label>
         <input type="text" id="idioma_original" placeholder="Idioma Original" required>
+        <br>
+        <label for="">País de Produccion: </label>
         <input type="text" id="pais_produccion" placeholder="País de Producción" required>
+        <br>
+        <label for="">Calificación: </label>
         <input type="number" step="0.1" id="calificacion_IMDB" placeholder="Calificación IMDB" required>
+        <br>
+        <label for="">Sinopsis: </label>
         <textarea id="sinopsis" placeholder="Sinopsis" required></textarea>
         <button id="insertarBtn">Insertar</button>
         <button id="editarBtn">Editar</button>
