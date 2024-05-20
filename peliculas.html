@@ -1,8 +1,5 @@
-Claro, aquí tienes el código HTML completo modificado para gestionar películas en lugar de mascotas:
-
-```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -19,14 +16,10 @@ Claro, aquí tienes el código HTML completo modificado para gestionar película
             margin-bottom: 20px;
         }
 
-        input,
-        button,
-        textarea {
+        input, button {
             margin: 5px 0;
             padding: 10px;
             font-size: 16px;
-            width: 100%;
-            box-sizing: border-box;
         }
 
         button {
@@ -39,14 +32,11 @@ Claro, aquí tienes el código HTML completo modificado para gestionar película
             margin-top: 20px;
         }
 
-        table,
-        th,
-        td {
+        table, th, td {
             border: 1px solid black;
         }
 
-        th,
-        td {
+        th, td {
             padding: 10px;
             text-align: left;
         }
@@ -60,13 +50,13 @@ Claro, aquí tienes el código HTML completo modificado para gestionar película
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyA_Jgd3iinbMYU2GTJfesdqI3s09uHfjWw",
-            authDomain: "peliculas-ae2f1.firebaseapp.com",
-            projectId: "peliculas-ae2f1",
-            storageBucket: "peliculas-ae2f1.appspot.com",
-            messagingSenderId: "854647408875",
-            appId: "1:854647408875:web:39489056b967ada8b316ae",
-            measurementId: "G-EK15PN80TF"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -150,12 +140,12 @@ Claro, aquí tienes el código HTML completo modificado para gestionar película
             const data = {
                 titulo: document.getElementById('titulo').value,
                 director: document.getElementById('director').value,
-                año_estreno: parseInt(document.getElementById('año_estreno').value),
+                año_estreno: document.getElementById('año_estreno').value,
                 genero: document.getElementById('genero').value,
-                duracion_minutos: parseInt(document.getElementById('duracion_minutos').value),
+                duracion_minutos: document.getElementById('duracion_minutos').value,
                 idioma_original: document.getElementById('idioma_original').value,
                 pais_produccion: document.getElementById('pais_produccion').value,
-                calificacion_IMDB: parseFloat(document.getElementById('calificacion_IMDB').value),
+                calificacion_IMDB: document.getElementById('calificacion_IMDB').value,
                 sinopsis: document.getElementById('sinopsis').value
             };
             await createPelicula(data);
@@ -168,12 +158,12 @@ Claro, aquí tienes el código HTML completo modificado para gestionar película
             const updatedData = {
                 titulo: document.getElementById('titulo').value,
                 director: document.getElementById('director').value,
-                año_estreno: parseInt(document.getElementById('año_estreno').value),
+                año_estreno: document.getElementById('año_estreno').value,
                 genero: document.getElementById('genero').value,
-                duracion_minutos: parseInt(document.getElementById('duracion_minutos').value),
+                duracion_minutos: document.getElementById('duracion_minutos').value,
                 idioma_original: document.getElementById('idioma_original').value,
                 pais_produccion: document.getElementById('pais_produccion').value,
-                calificacion_IMDB: parseFloat(document.getElementById('calificacion_IMDB').value),
+                calificacion_IMDB: document.getElementById('calificacion_IMDB').value,
                 sinopsis: document.getElementById('sinopsis').value
             };
             await updatePelicula(id, updatedData);
@@ -227,23 +217,23 @@ Claro, aquí tienes el código HTML completo modificado para gestionar película
     </form>
 
     <h2>Lista de Películas</h2>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Título</th>
-            <th>Director</th>
-            <th>Año de Estreno</th>
-            <th>Género</th>
-            <th>Duración en Minutos</th>
-            <th>Idioma Original</th>
-            <th>País de Producción</th>
-            <th>Calificación IMDB</th>
-            <th>Sinopsis</th>
-        </tr>
-    </thead>
-    <tbody id="tablaPeliculasBody"></tbody>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Director</th>
+                <th>Año de Estreno</th>
+                <th>Género</th>
+                <th>Duración en Minutos</th>
+                <th>Idioma Original</th>
+                <th>País de Producción</th>
+                <th>Calificación IMDB</th>
+                <th>Sinopsis</th>
+            </tr>
+        </thead>
+        <tbody id="tablaPeliculasBody"></tbody>
     </table>
-
 </body>
 
 </html>
