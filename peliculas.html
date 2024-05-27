@@ -60,22 +60,21 @@
             background-color: rgb(183, 235, 237);
         }
     </style>
-    
+
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Correo electrónico" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        <button type="submit">Iniciar sesión</button>
+        <button id="googleLoginBtn">Iniciar sesión con Gmail</button>
+    </form>
+
 
     <script type="module">
-        
-        // Verificar el inicio de sesión
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (!user) {
-                // Usuario no autenticado, redirige a la página de inicio de sesión
-                window.location.href = 'login.html';
-            }
-        });
-
-
         // Importamos las funciones necesarias de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+
 
         // Configuración de Firebase
         const firebaseConfig = {
@@ -88,29 +87,36 @@
             measurementId: "G-EK15PN80TF"
         };
 
-                // Inicializa Firebase
-        firebase.initializeApp(firebaseConfig);
-
-        // Función para iniciar sesión con Google
-        async function iniciarSesion() {
-            try {
-                // Crea una instancia del proveedor de autenticación de Google
-                const provider = new firebase.auth.GoogleAuthProvider();
-                // Inicia sesión con el proveedor de Google
-                await firebase.auth().signInWithPopup(provider);
-                // Redirige a la página de películas después de iniciar sesión
-                window.location.href = 'peliculas.html';
-            } catch (error) {
-                console.error(error.message);
-                alert('Ocurrió un error al iniciar sesión. Por favor, inténtalo de nuevo.');
-            }
-        }
-
-
         // Inicializamos Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const peliculasCollection = collection(db, "peliculas");
+        const auth = getAuth(app);
+
+        // Evento para manejar el inicio de sesión con Gmail
+        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                console.error(error.message);
+                alert('Ocurrió un error al iniciar sesión con Gmail. Por favor, inténtalo de nuevo.');
+            }
+        });
+        // Evento para manejar el inicio de sesión con correo electrónico y contraseña
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = 'peliculas.html';
+            } catch (error) {
+                console.error(error.message);
+                alert('Ocurrió un error al iniciar sesión con correo electrónico y contraseña. Por favor, inténtalo de nuevo.');
+            }
+        });
+
 
         // Función para crear una nueva película en la colección
         async function createPelicula(data) {
@@ -260,9 +266,6 @@
 </head>
 
 <body>
-        <h1>Inicio de Sesión</h1>
-        <button onclick="iniciarSesion()">Iniciar sesión con Google</button>
-
     <h1>PELICULAS CRUD</h1>
 
     <h2>Buscar Película</h2>
