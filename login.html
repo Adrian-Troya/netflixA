@@ -10,23 +10,24 @@
             font-family: Arial, sans-serif;
             margin: 20px;
             padding: 20px;
+            background-color: rgb(183, 235, 237);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-
-        input,
         button {
-            margin: 5px 0;
+            cursor: pointer;
             padding: 10px;
             font-size: 16px;
         }
-
-        button {
-            cursor: pointer;
-        }
     </style>
     <script type="module">
+        // Importamos las funciones necesarias de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
 
+        // Configuración de Firebase
         const firebaseConfig = {
             apiKey: "API_KEY_HERE",
             authDomain: "peliculas-ae2f1.firebaseapp.com",
@@ -37,27 +38,28 @@
             measurementId: "G-EK15PN80TF"
         };
 
+        // Inicializamos Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-
         const provider = new GoogleAuthProvider();
 
-        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+        // Función para manejar el login con Google
+        async function login() {
             try {
                 const result = await signInWithPopup(auth, provider);
-                console.log('User logged in:', result.user);
-                window.location.href = 'peliculas.html';
+                console.log("Usuario autenticado: ", result.user);
+                window.location.href = "peliculas.html"; // Redirigimos a la página de películas
             } catch (error) {
-                console.error('Error logging in with Google:', error);
-                alert('Login with Google failed: ' + error.message);
+                console.error("Error al iniciar sesión: ", error);
             }
-        });
+        }
+
+        document.getElementById('loginBtn').addEventListener('click', login);
     </script>
 </head>
 
 <body>
-    <h1>Login</h1>
-    <button id="googleLoginBtn">Login with Google</button>
+    <button id="loginBtn">Iniciar Sesión con Google</button>
 </body>
 
 </html>
