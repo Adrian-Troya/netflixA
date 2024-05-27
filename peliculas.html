@@ -65,6 +65,7 @@
         // Importamos las funciones necesarias de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
 
         // Configuración de Firebase
         const firebaseConfig = {
@@ -80,12 +81,18 @@
         // Inicializamos Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const peliculasCollection = collection(db, "peliculas");
+        const auth = getAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            }
+        });
 
         // Función para crear una nueva película en la colección
         async function createPelicula(data) {
             try {
-                const docRef = await addDoc(peliculasCollection, data);
+                const docRef = await addDoc(collection(db, "peliculas"), data);
                 console.log("Document written with ID: ", docRef.id);
                 await getPeliculas(); // Actualizamos la lista de películas
             } catch (e) {
@@ -108,6 +115,7 @@
             console.log("Document deleted with ID: ", id);
             await getPeliculas(); // Actualizamos la lista de películas
         }
+
 
         // Función para obtener y mostrar todas las películas
         async function getPeliculas() {
@@ -226,10 +234,16 @@
 
         // Cargar la lista de películas cuando se carga la página
         window.onload = getPeliculas;
+
     </script>
 </head>
 
 <body>
+    <div id="login-container">
+        <h1>Iniciar Sesión</h1>
+        <button id="loginBtn">Iniciar sesión con Google</button>
+    </div>
+
     <h1>PELICULAS CRUD</h1>
 
     <h2>Buscar Película</h2>
