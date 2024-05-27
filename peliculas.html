@@ -79,46 +79,8 @@
 
         // Inicializamos Firebase
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const firestore = getFirestore(app);
-
-        // Función para redirigir al usuario a la página de películas después del inicio de sesión exitoso
-        const redirectUser = () => {
-            window.location.href = 'peliculas.html';
-        };
-
-        // Verifica el estado de autenticación del usuario
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                redirectUser();
-            }
-        });
-
-        // Evento para manejar el inicio de sesión con Gmail
-        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
-            const provider = new GoogleAuthProvider();
-            try {
-                await signInWithPopup(auth, provider);
-            } catch (error) {
-                console.error(error.message);
-                alert('Ocurrió un error al iniciar sesión con Gmail. Por favor, inténtalo de nuevo.');
-            }
-        });
-
-        // Evento para manejar el inicio de sesión con Firestore
-        document.getElementById('loginFormFirestore').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('emailFirestore').value;
-            const password = document.getElementById('passwordFirestore').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                redirectUser();
-            } catch (error) {
-                console.error(error.message);
-                alert('Ocurrió un error al iniciar sesión con Firestore. Por favor, inténtalo de nuevo.');
-            }
-        });
-
+        const db = getFirestore(app);
+        const peliculasCollection = collection(db, "peliculas");
 
         // Función para crear una nueva película en la colección
         async function createPelicula(data) {
