@@ -77,6 +77,25 @@
             measurementId: "G-EK15PN80TF"
         };
 
+                // Inicializa Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Función para iniciar sesión con Google
+        async function iniciarSesion() {
+            try {
+                // Crea una instancia del proveedor de autenticación de Google
+                const provider = new firebase.auth.GoogleAuthProvider();
+                // Inicia sesión con el proveedor de Google
+                await firebase.auth().signInWithPopup(provider);
+                // Redirige a la página de películas después de iniciar sesión
+                window.location.href = 'peliculas.html';
+            } catch (error) {
+                console.error(error.message);
+                alert('Ocurrió un error al iniciar sesión. Por favor, inténtalo de nuevo.');
+            }
+        }
+
+
         // Inicializamos Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -230,6 +249,9 @@
 </head>
 
 <body>
+        <h1>Inicio de Sesión</h1>
+        <button onclick="iniciarSesion()">Iniciar sesión con Google</button>
+
     <h1>PELICULAS CRUD</h1>
 
     <h2>Buscar Película</h2>
