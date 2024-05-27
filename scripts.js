@@ -2,6 +2,29 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase
 import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
 import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
+// Función para iniciar sesión con correo electrónico y contraseña
+document.getElementById('emailLoginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    try {
+        await loginWithEmailPassword(email, password);
+    } catch (error) {
+        console.error("Error durante el inicio de sesión:", error);
+        alert("Error durante el inicio de sesión: " + error.message);
+    }
+});
+
+// Función para iniciar sesión con usuario y contraseña
+async function loginWithEmailPassword(email, password) {
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+        console.error("Error durante el inicio de sesión:", error);
+        alert("Error durante el inicio de sesión: " + error.message);
+    }
+}
+
 // Configuración de Firebase
 const firebaseConfig = {
     apiKey: "API_KEY_HERE",
