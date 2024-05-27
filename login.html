@@ -25,7 +25,7 @@
     </style>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "API_KEY_HERE",
@@ -40,17 +40,16 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+        const provider = new GoogleAuthProvider();
+
+        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
             try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                console.log('User logged in:', userCredential.user);
+                const result = await signInWithPopup(auth, provider);
+                console.log('User logged in:', result.user);
                 window.location.href = 'peliculas.html';
             } catch (error) {
-                console.error('Error logging in:', error);
-                alert('Login failed: ' + error.message);
+                console.error('Error logging in with Google:', error);
+                alert('Login with Google failed: ' + error.message);
             }
         });
     </script>
@@ -58,15 +57,7 @@
 
 <body>
     <h1>Login</h1>
-    <form id="loginForm">
-        <label for="email">Email:</label>
-        <input type="email" id="email" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" required>
-        <br>
-        <button type="submit">Login</button>
-    </form>
+    <button id="googleLoginBtn">Login with Google</button>
 </body>
 
 </html>
