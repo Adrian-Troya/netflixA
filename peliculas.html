@@ -55,12 +55,48 @@
         tbody tr:hover {
             background-color: yellow;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 
     <script type="module">
         // Importamos las funciones necesarias de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
         // Configuración de Firebase
@@ -95,7 +131,7 @@
         });
 
         // Función para iniciar sesión con Google
-        async function login() {
+        async function loginWithGoogle() {
             try {
                 await signInWithPopup(auth, provider);
             } catch (error) {
@@ -203,6 +239,34 @@
             }
         }
 
+        // Función para iniciar sesión con usuario y contraseña
+        async function loginWithEmailPassword(email, password) {
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                console.error("Error durante el inicio de sesión:", error);
+                alert("Error durante el inicio de sesión: " + error.message);
+            }
+        }
+
+        // Mostrar la lista de correos registrados
+        async function showEmailList() {
+            const emails = ["correo1@example.com", "correo2@example.com", "correo3@example.com"]; // Ejemplo, reemplaza con datos reales si los tienes
+            const emailList = document.getElementById('emailList');
+            emailList.innerHTML = '';
+            emails.forEach(email => {
+                const emailItem = document.createElement('li');
+                emailItem.textContent = email;
+                emailItem.addEventListener('click', () => {
+                    document.getElementById('email').value = email;
+                    document.getElementById('password').focus();
+                    document.getElementById('emailModal').style.display = 'none';
+                });
+                emailList.appendChild(emailItem);
+            });
+            document.getElementById('emailModal').style.display = 'block';
+        }
+
         // Eventos para manejar el formulario
         document.getElementById('insertarBtn').addEventListener('click', async (e) => {
             e.preventDefault();
@@ -256,15 +320,36 @@
             }
         });
 
+        // Evento para manejar el formulario de inicio de sesión por correo
+        document.getElementById('emailLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            await loginWithEmailPassword(email, password);
+        });
+
+        // Mostrar ventana modal de correos al hacer clic en el botón "Seleccionar Correo"
+        document.getElementById('selectEmailBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            showEmailList();
+        });
+
         // Cargar la lista de películas cuando se carga la página
         window.onload = getPeliculas;
     </script>
 </head>
 
 <body>
-    <div id="login-container" style="display: none;">
+    <div id="login-container">
         <h2>Iniciar Sesión</h2>
-        <button onclick="login()">Iniciar Sesión con Google</button>
+        <button onclick="loginWithGoogle()">Iniciar Sesión con Google</button>
+        <h3>o</h3>
+        <form id="emailLoginForm">
+            <input type="email" id="email" placeholder="Correo Electrónico" required>
+            <input type="password" id="password" placeholder="Contraseña" required>
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+        <button id="selectEmailBtn">Seleccionar Correo</button>
     </div>
 
     <div id="app-container" style="display: none;">
@@ -329,6 +414,14 @@
             </thead>
             <tbody id="tablaPeliculasBody"></tbody>
         </table>
+    </div>
+
+    <div id="emailModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('emailModal').style.display='none'">&times;</span>
+            <h2>Seleccionar Correo</h2>
+            <ul id="emailList"></ul>
+        </div>
     </div>
 </body>
 
