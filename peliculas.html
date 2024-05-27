@@ -64,6 +64,7 @@
     <script type="module">
         // Importamos las funciones necesarias de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
         // Configuración de Firebase
@@ -79,7 +80,28 @@
 
         // Inicializamos Firebase
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // Verificar el estado de autenticación del usuario
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("User is signed in: ", user.email);
+            } else {
+                // Redirigir a login.html si el usuario no está autenticado
+                window.location.href = "login.html";
+            }
+        });
+
+        // Manejar el cierre de sesión
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = "login.html";
+            }).catch((error) => {
+                console.error("Error signing out: ", error);
+            });
+        });
+
         const peliculasCollection = collection(db, "peliculas");
 
         // Función para crear una nueva película en la colección
@@ -231,7 +253,7 @@
 
 <body>
     <h1>PELICULAS CRUD</h1>
-
+    <button id="logoutBtn" style="float: right;">Cerrar sesión</button>
     <h2>Buscar Película</h2>
     <form id="buscarForm">
         <input type="text" id="buscarId" placeholder="ID de la Película" required>
