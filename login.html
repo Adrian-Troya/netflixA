@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
+    <script>
+        // Configura tu aplicación Firebase
+        const firebaseConfig = {
+            apiKey: "API_KEY",
+            authDomain: "TU_DOMINIO.firebaseapp.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.appspot.com",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
+        };
+
+        // Inicializa Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Función para iniciar sesión con Google
+        async function iniciarSesion() {
+            try {
+                // Crea una instancia del proveedor de autenticación de Google
+                const provider = new firebase.auth.GoogleAuthProvider();
+                // Inicia sesión con el proveedor de Google
+                await firebase.auth().signInWithPopup(provider);
+                // Redirige a la página de películas después de iniciar sesión
+                window.location.href = 'peliculas.html';
+            } catch (error) {
+                console.error(error.message);
+                alert('Ocurrió un error al iniciar sesión. Por favor, inténtalo de nuevo.');
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Inicio de Sesión</h1>
+    <button onclick="iniciarSesion()">Iniciar sesión con Google</button>
+</body>
+
+</html>

@@ -60,8 +60,19 @@
             background-color: rgb(183, 235, 237);
         }
     </style>
+    
 
     <script type="module">
+        
+        // Verificar el inicio de sesión
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (!user) {
+                // Usuario no autenticado, redirige a la página de inicio de sesión
+                window.location.href = 'login.html';
+            }
+        });
+
+
         // Importamos las funciones necesarias de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
