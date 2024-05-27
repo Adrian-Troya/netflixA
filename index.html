@@ -92,84 +92,70 @@
             cursor: pointer;
         }
     </style>
+    <a href="login.html">Iniciar Sesión</a>
 </head>
 
 <body>
-    <div id="login-container">
-        <h2>Iniciar Sesión</h2>
-        <button onclick="loginWithGoogle()">Iniciar Sesión con Google</button>
-        <h3>o</h3>
-        <form id="emailLoginForm">
-            <input type="email" id="email" placeholder="Correo Electrónico" required>
-            <input type="password" id="password" placeholder="Contraseña" required>
-            <button type="submit">Iniciar Sesión</button>
-        </form>
-        <button id="selectEmailBtn">Seleccionar Correo</button>
-    </div>
+    <h1>PELICULAS CRUD</h1>
 
-    <div id="app-container" style="display: none;">
-        <button onclick="logout()">Cerrar Sesión</button>
-        <h1>PELICULAS CRUD</h1>
+    <h2>Buscar Película</h2>
+    <form id="buscarForm">
+        <input type="text" id="buscarId" placeholder="ID de la Película" required>
+        <button type="submit">Buscar</button>
+    </form>
 
-        <h2>Buscar Película</h2>
-        <form id="buscarForm">
-            <input type="text" id="buscarId" placeholder="ID de la Película" required>
-            <button type="submit">Buscar</button>
-        </form>
+    <h2>Gestionar Película</h2>
+    <form id="peliculaForm">
+        <label for="titulo">Título: </label>
+        <input type="text" id="titulo" placeholder="Título" required>
+        <br>
+        <label for="director">Director: </label>
+        <input type="text" id="director" placeholder="Director" required>
+        <br>
+        <label for="año_estreno">Año de Estreno: </label>
+        <input type="number" id="año_estreno" placeholder="Año de Estreno" required>
+        <br>
+        <label for="genero">Género: </label>
+        <input type="text" id="genero" placeholder="Género" required>
+        <br>
+        <label for="duracion_minutos">Duración en Minutos: </label>
+        <input type="number" id="duracion_minutos" placeholder="Duración en Minutos" required>
+        <br>
+        <label for="idioma_original">Idioma Original: </label>
+        <input type="text" id="idioma_original" placeholder="Idioma Original" required>
+        <br>
+        <label for="pais_produccion">País de Producción: </label>
+        <input type="text" id="pais_produccion" placeholder="País de Producción" required>
+        <br>
+        <label for="calificacion_IMDB">Calificación: </label>
+        <input type="number" step="0.1" id="calificacion_IMDB" placeholder="Calificación IMDB" required>
+        <br>
+        <label for="sinopsis">Sinopsis: </label>
+        <textarea id="sinopsis" placeholder="Sinopsis" required></textarea>
+        <br>
+        <button style="background-color: greenyellow; color: black;" id="insertarBtn">Insertar</button>
+        <button style="background-color: orange; color: black;" id="editarBtn">Editar</button>
+        <button style="background-color: red; color: black;" id="borrarBtn">Borrar</button>
+    </form>
 
-        <h2>Gestionar Película</h2>
-        <form id="peliculaForm">
-            <label for="titulo">Título: </label>
-            <input type="text" id="titulo" placeholder="Título" required>
-            <br>
-            <label for="director">Director: </label>
-            <input type="text" id="director" placeholder="Director" required>
-            <br>
-            <label for="año_estreno">Año de Estreno: </label>
-            <input type="number" id="año_estreno" placeholder="Año de Estreno" required>
-            <br>
-            <label for="genero">Género: </label>
-            <input type="text" id="genero" placeholder="Género" required>
-            <br>
-            <label for="duracion_minutos">Duración en Minutos: </label>
-            <input type="number" id="duracion_minutos" placeholder="Duración en Minutos" required>
-            <br>
-            <label for="idioma_original">Idioma Original: </label>
-            <input type="text" id="idioma_original" placeholder="Idioma Original" required>
-            <br>
-            <label for="pais_produccion">País de Producción: </label>
-            <input type="text" id="pais_produccion" placeholder="País de Producción" required>
-            <br>
-            <label for="calificacion_IMDB">Calificación: </label>
-            <input type="number" step="0.1" id="calificacion_IMDB" placeholder="Calificación IMDB" required>
-            <br>
-            <label for="sinopsis">Sinopsis: </label>
-            <textarea id="sinopsis" placeholder="Sinopsis" required></textarea>
-            <br>
-            <button style="background-color: greenyellow; color: black;" id="insertarBtn">Insertar</button>
-            <button style="background-color: orange; color: black;" id="editarBtn">Editar</button>
-            <button style="background-color: red; color: black;" id="borrarBtn">Borrar</button>
-        </form>
-
-        <h2>Lista de Películas</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Director</th>
-                    <th>Año de Estreno</th>
-                    <th>Género</th>
-                    <th>Duración en Minutos</th>
-                    <th>Idioma Original</th>
-                    <th>País de Producción</th>
-                    <th>Calificación IMDB</th>
-                    <th>Sinopsis</th>
-                </tr>
-            </thead>
-            <tbody id="tablaPeliculasBody"></tbody>
-        </table>
-    </div>
+    <h2>Lista de Películas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Director</th>
+                <th>Año de Estreno</th>
+                <th>Género</th>
+                <th>Duración en Minutos</th>
+                <th>Idioma Original</th>
+                <th>País de Producción</th>
+                <th>Calificación IMDB</th>
+                <th>Sinopsis</th>
+            </tr>
+        </thead>
+        <tbody id="tablaPeliculasBody"></tbody>
+    </table>
 
     <div id="emailModal" class="modal">
         <div class="modal-content">
@@ -180,10 +166,154 @@
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"></script>
-    <script>
-        // Aquí va el código JavaScript...
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "API_KEY_HERE",
+            authDomain: "peliculas-ae2f1.firebaseapp.com",
+            projectId: "peliculas-ae2f1",
+            storageBucket: "peliculas-ae2f1.appspot.com",
+            messagingSenderId: "854647408875",
+            appId: "1:854647408875:web:39489056b967ada8b316ae",
+            measurementId: "G-EK15PN80TF"
+        };
+
+        // Inicializamos Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const peliculasCollection = collection(db, "peliculas");
+
+        // Obtener todas las películas y actualizar la tabla
+        async function getPeliculas() {
+            const querySnapshot = await getDocs(peliculasCollection);
+            const tablaPeliculasBody = document.getElementById('tablaPeliculasBody');
+            tablaPeliculasBody.innerHTML = ''; // Limpiar tabla antes de llenar
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${doc.id}</td>
+                    <td>${data.titulo}</td>
+                    <td>${data.director}</td>
+                    <td>${data.año_estreno}</td>
+                    <td>${data.genero}</td>
+                    <td>${data.duracion_minutos}</td>
+                    <td>${data.idioma_original}</td>
+                    <td>${data.pais_produccion}</td>
+                    <td>${data.calificacion_IMDB}</td>
+                    <td>${data.sinopsis}</td>
+                `;
+                tablaPeliculasBody.appendChild(tr);
+            });
+        }
+
+        // Buscar una película por ID
+        document.getElementById('buscarForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('buscarId').value;
+            const docRef = doc(db, "peliculas", id);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                document.getElementById('titulo').value = data.titulo;
+                document.getElementById('director').value = data.director;
+                document.getElementById('año_estreno').value = data.año_estreno;
+                document.getElementById('genero').value = data.genero;
+                document.getElementById('duracion_minutos').value = data.duracion_minutos;
+                document.getElementById('idioma_original').value = data.idioma_original;
+                document.getElementById('pais_produccion').value = data.pais_produccion;
+                document.getElementById('calificacion_IMDB').value = data.calificacion_IMDB;
+                document.getElementById('sinopsis').value = data.sinopsis;
+            } else {
+                alert("No se encontró la película con ID: " + id);
+            }
+        });
+
+        // Insertar nueva película
+        document.getElementById('insertarBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const nuevaPelicula = {
+                titulo: document.getElementById('titulo').value,
+                director: document.getElementById('director').value,
+                año_estreno: parseInt(document.getElementById('año_estreno').value),
+                genero: document.getElementById('genero').value,
+                duracion_minutos: parseInt(document.getElementById('duracion_minutos').value),
+                idioma_original: document.getElementById('idioma_original').value,
+                pais_produccion: document.getElementById('pais_produccion').value,
+                calificacion_IMDB: parseFloat(document.getElementById('calificacion_IMDB').value),
+                sinopsis: document.getElementById('sinopsis').value
+            };
+            try {
+                await addDoc(peliculasCollection, nuevaPelicula);
+                getPeliculas(); // Actualizar la tabla después de insertar
+                alert("Película insertada con éxito");
+            } catch (error) {
+                console.error("Error insertando película:", error);
+            }
+        });
+
+        // Editar película existente
+        document.getElementById('editarBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('buscarId').value;
+            const peliculaActualizada = {
+                titulo: document.getElementById('titulo').value,
+                director: document.getElementById('director').value,
+                año_estreno: parseInt(document.getElementById('año_estreno').value),
+                genero: document.getElementById('genero').value,
+                duracion_minutos: parseInt(document.getElementById('duracion_minutos').value),
+                idioma_original: document.getElementById('idioma_original').value,
+                pais_produccion: document.getElementById('pais_produccion').value,
+                calificacion_IMDB: parseFloat(document.getElementById('calificacion_IMDB').value),
+                sinopsis: document.getElementById('sinopsis').value
+            };
+            const docRef = doc(db, "peliculas", id);
+            try {
+                await updateDoc(docRef, peliculaActualizada);
+                getPeliculas(); // Actualizar la tabla después de editar
+                alert("Película editada con éxito");
+            } catch (error) {
+                console.error("Error editando película:", error);
+            }
+        });
+
+        // Borrar película existente
+        document.getElementById('borrarBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('buscarId').value;
+            const docRef = doc(db, "peliculas", id);
+            try {
+                await deleteDoc(docRef);
+                getPeliculas(); // Actualizar la tabla después de borrar
+                alert("Película borrada con éxito");
+            } catch (error) {
+                console.error("Error borrando película:", error);
+            }
+        });
+
+        // Mostrar la lista de correos electrónicos (simulación)
+        function showEmailList() {
+            const emailList = ["example1@gmail.com", "example2@gmail.com", "example3@gmail.com"];
+            const ul = document.getElementById('emailList');
+            ul.innerHTML = '';
+            emailList.forEach(email => {
+                const li = document.createElement('li');
+                li.textContent = email;
+                li.onclick = () => {
+                    document.getElementById('email').value = email;
+                    document.getElementById('emailModal').style.display = 'none';
+                };
+                ul.appendChild(li);
+            });
+            document.getElementById('emailModal').style.display = 'block';
+        }
+
+        // Inicializar la tabla de películas al cargar la página
+        getPeliculas();
     </script>
 </body>
 
