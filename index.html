@@ -4,73 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f2f2f2;
-        }
-
-        .login-container {
-            text-align: center;
-            padding: 20px;
-            border: 1px solid #ddd;
-            background-color: #fff;
-            border-radius: 8px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 4px;
-        }
-    </style>
-    <script type="module">
-        // Importamos las funciones necesarias de Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
-
-        // Configuración de Firebase
-        const firebaseConfig = {
-            apiKey: "API_KEY_HERE",
-            authDomain: "peliculas-ae2f1.firebaseapp.com",
-            projectId: "peliculas-ae2f1",
-            storageBucket: "peliculas-ae2f1.appspot.com",
-            messagingSenderId: "854647408875",
-            appId: "1:854647408875:web:39489056b967ada8b316ae",
-            measurementId: "G-EK15PN80TF"
-        };
-
-        // Inicializamos Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
-        // Función para iniciar sesión con Google
-        async function login() {
-            try {
-                await signInWithPopup(auth, provider);
-                window.location.href = 'peliculas.html'; // Redirigir a la página de películas
-            } catch (error) {
-                console.error("Error during sign in:", error);
-            }
-        }
-    </script>
+    <title>PELÍCULAS CRUD</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <div class="login-container">
+    <div id="login-container">
         <h2>Iniciar Sesión</h2>
-        <button onclick="login()">Iniciar Sesión con Google</button>
+        <button onclick="loginWithGoogle()">Iniciar Sesión con Google</button>
+        <h3>o</h3>
+        <form id="emailLoginForm">
+            <input type="email" id="email" placeholder="Correo Electrónico" required>
+            <input type="password" id="password" placeholder="Contraseña" required>
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+        <button id="selectEmailBtn">Seleccionar Correo</button>
     </div>
-</body>
 
-</html>
+    <div id="app-container" style="display: none;">
+        <button onclick="logout()">Cerrar Sesión</button>
+        <h1>PELICULAS CRUD</h1>
+
+        <h2>Buscar Película</h2>
+        <form id="buscarForm">
+            <input type="text" id="buscarId" placeholder="ID de la Película" required>
+            <button type="submit">Buscar</button>
+        </form>
+
+        <h2>Gestionar Película</h2>
+        <form id="peliculaForm">
+            <!-- Inputs para la gestión de películas -->
+        </form>
+
+        <h2>Lista de Películas</h2>
+        <table>
+            <!-- Tabla para mostrar las películas -->
+        </table>
+    </
