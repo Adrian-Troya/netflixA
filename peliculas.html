@@ -1,17 +1,15 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión y PELÍCULAS CRUD</title>
+    <title>PELÍCULAS CRUD</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
             padding: 20px;
-            border: black solid 2px;
-            background-color: rgb(183, 235, 237);
         }
 
         form {
@@ -55,11 +53,14 @@
         tbody tr:hover {
             background-color: yellow;
         }
+
+        body {
+            border: black solid 2px;
+            width: 100%;
+            background-color: rgb(183, 235, 237);
+        }
     </style>
 
-    <!-- Agregar Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
     <script type="module">
         // Importamos las funciones necesarias de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
@@ -80,44 +81,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const peliculasCollection = collection(db, "peliculas");
-
-        // Configuración de Firebase para autenticación
-        const authConfig = {
-            apiKey: "API_KEY_HERE",
-            authDomain: "tu-proyecto.firebaseapp.com",
-            projectId: "tu-proyecto",
-            storageBucket: "tu-proyecto.appspot.com",
-            messagingSenderId: "tu-sender-id",
-            appId: "tu-app-id",
-            measurementId: "tu-measurement-id"
-        };
-
-        // Inicializar Firebase para autenticación
-        const authApp = initializeApp(authConfig, "authApp");
-        const auth = firebase.auth();
-
-        // Función para iniciar sesión con Google
-        function signInWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider)
-                .then((result) => {
-                    // El usuario ha iniciado sesión correctamente
-                    console.log('Usuario autenticado:', result.user);
-                    window.location.href = "#dashboard"; // Redirigir a la sección de dashboard después de iniciar sesión
-                })
-                .catch((error) => {
-                    // Hubo un error al iniciar sesión
-                    console.error('Error al iniciar sesión:', error);
-                });
-        }
-
-        // Verificar si el usuario ya ha iniciado sesión
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                // El usuario ya ha iniciado sesión, redirigir a la sección de dashboard
-                window.location.href = "#dashboard";
-            }
-        });
 
         // Función para crear una nueva película en la colección
         async function createPelicula(data) {
@@ -267,10 +230,289 @@
 </head>
 
 <body>
-    <h1>Iniciar Sesión</h1>
-    <button onclick="signInWithGoogle()">Iniciar sesión con Google</button>
+    <h1>PELICULAS CRUD</h1>
 
-    <h1 id="dashboard">PELICULAS CRUD</h1>
+    <h2>Buscar Película</h2>
+    <form id="buscarForm">
+        <input type="text" id="buscarId" placeholder="ID de la Película" required>
+        <button type="submit">Buscar</button>
+    </form>
+
+    <h2>Gestionar Película</h2>
+    <form id="peliculaForm">
+        <br>
+        <label for="">Título: </label>
+        <input type="text" id="titulo" placeholder="Título" required>
+        <br>
+        <label for="">Director: </label>
+        <input type="text" id="director" placeholder="Director" required>
+        <br>
+        <label for="">Año de Estreno: </label>
+        <input type="number" id="año_estreno" placeholder="Año de Estreno" required>
+        <br>
+        <label for="">Género: </label>
+        <input type="text" id="genero" placeholder="Género" required>
+        <br>
+        <label for="">Duración en Minutos: </label>
+        <input type="number" id="duracion_minutos" placeholder="Duración en Minutos" required>
+        <br>
+        <label for="">Idioma Original: </label>
+        <input type="text" id="idioma_original" placeholder="Idioma Original" required>
+        <br>
+        <label for="">País de Produccion: </label>
+        <input type="text" id="pais_produccion" placeholder="País de Producción" required>
+        <br>
+        <label for="">Calificación: </label>
+        <input type="number" step="0.1" id="calificacion_IMDB" placeholder="Calificación IMDB" required>
+        <br>
+        <label for="">Sinopsis: </label>
+        <textarea id="sinopsis" placeholder="Sinopsis" required></textarea>
+        <br>
+        <button style="background-color: greenyellow; color: black;" id="insertarBtn">Insertar</button>
+        <button style="background-color: orange; color: black;" id="editarBtn">Editar</button>
+        <button style="background-color: red; color: black;" id="borrarBtn">Borrar</button>
+    </form>
+
+    <h2>Lista de Películas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Director</th>
+                <th>Año de Estreno</th>
+                <th>Género</th>
+                <th>Duración en Minutos</th>
+                <th>Idioma Original</th>
+                <th>País de Producción</th>
+                <th>Calificación IMDB</th>
+                <th>Sinopsis</th>
+            </tr>
+        </thead>
+        <tbody id="tablaPeliculasBody"></tbody>
+    </table>
+</body>
+
+</html>
+--!>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PELICULAS CRUD</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            border: black solid 2px;
+            background-color: rgb(183, 235, 237);
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, button, textarea {
+            margin: 5px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tbody tr:hover {
+            background-color: yellow;
+        }
+    </style>
+    <!-- Agregar Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "your-api-key",
+            authDomain: "your-project-id.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project-id.appspot.com",
+            messagingSenderId: "your-sender-id",
+            appId: "your-app-id"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const peliculasCollection = collection(db, "peliculas");
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "login.html"; // Redirigir a la página de inicio de sesión si no está autenticado
+            }
+        });
+
+        function signOutUser() {
+            signOut(auth).then(() => {
+                window.location.href = "login.html"; // Redirigir a la página de inicio de sesión después de cerrar sesión
+            }).catch((error) => {
+                console.error("Error al cerrar sesión:", error);
+            });
+        }
+
+        async function createPelicula(data) {
+            try {
+                const docRef = await addDoc(peliculasCollection, data);
+                console.log("Document written with ID: ", docRef.id);
+                await getPeliculas(); // Actualizamos la lista de películas
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+        }
+
+        async function updatePelicula(id, updatedData) {
+            const peliculaDoc = doc(db, "peliculas", id);
+            await updateDoc(peliculaDoc, updatedData);
+            console.log("Document updated with ID: ", id);
+            await getPeliculas(); // Actualizamos la lista de películas
+        }
+
+        async function deletePelicula(id) {
+            const peliculaDoc = doc(db, "peliculas", id);
+            await deleteDoc(peliculaDoc);
+            console.log("Document deleted with ID: ", id);
+            await getPeliculas(); // Actualizamos la lista de películas
+        }
+
+        async function getPeliculas() {
+            const querySnapshot = await getDocs(peliculasCollection);
+            const tableBody = document.getElementById('tablaPeliculasBody');
+            tableBody.innerHTML = ''; // Limpiamos el contenido del cuerpo de la tabla
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const row = `
+                    <tr data-id="${doc.id}">
+                        <td>${doc.id}</td>
+                        <td>${data.titulo}</td>
+                        <td>${data.director}</td>
+                        <td>${data.año_estreno}</td>
+                        <td>${data.genero}</td>
+                        <td>${data.duracion_minutos}</td>
+                        <td>${data.idioma_original}</td>
+                        <td>${data.pais_produccion}</td>
+                        <td>${data.calificacion_IMDB}</td>
+                        <td>${data.sinopsis}</td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+
+            document.querySelectorAll('#tablaPeliculasBody tr').forEach(row => {
+                row.addEventListener('click', () => {
+                    const id = row.getAttribute('data-id');
+                    searchPeliculaById(id);
+                });
+            });
+        }
+
+        async function searchPeliculaById(id) {
+            const peliculaDoc = doc(db, "peliculas", id);
+            const docSnap = await getDoc(peliculaDoc);
+            if (docSnap.exists()) {
+                fillFormWithPeliculaData(docSnap.id, docSnap.data());
+            } else {
+                console.log("No such document!");
+                document.getElementById('peliculaForm').reset();
+            }
+        }
+
+        function fillFormWithPeliculaData(id, data) {
+            document.getElementById('buscarId').value = id;
+            document.getElementById('titulo').value = data.titulo;
+            document.getElementById('director').value = data.director;
+            document.getElementById('año_estreno').value = data.año_estreno;
+            document.getElementById('genero').value = data.genero;
+            document.getElementById('duracion_minutos').value = data.duracion_minutos;
+            document.getElementById('idioma_original').value = data.idioma_original;
+            document.getElementById('pais_produccion').value = data.pais_produccion;
+            document.getElementById('calificacion_IMDB').value = data.calificacion_IMDB;
+            document.getElementById('sinopsis').value = data.sinopsis;
+        }
+
+        document.getElementById('insertarBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const data = {
+                titulo: document.getElementById('titulo').value,
+                director: document.getElementById('director').value,
+                año_estreno: document.getElementById('año_estreno').value,
+                genero: document.getElementById('genero').value,
+                duracion_minutos: document.getElementById('duracion_minutos').value,
+                idioma_original: document.getElementById('idioma_original').value,
+                pais_produccion: document.getElementById('pais_produccion').value,
+                calificacion_IMDB: document.getElementById('calificacion_IMDB').value,
+                sinopsis: document.getElementById('sinopsis').value
+            };
+            await createPelicula(data);
+            document.getElementById('peliculaForm').reset();
+        });
+
+        document.getElementById('editarBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('buscarId').value;
+            const updatedData = {
+                titulo: document.getElementById('titulo').value,
+                director: document.getElementById('director').value,
+                año_estreno: document.getElementById('año_estreno').value,
+                genero: document.getElementById('genero').value,
+                duracion_minutos: document.getElementById('duracion_minutos').value,
+                idioma_original: document.getElementById('idioma_original').value,
+                pais_produccion: document.getElementById('pais_produccion').value,
+                calificacion_IMDB: document.getElementById('calificacion_IMDB').value,
+                sinopsis: document.getElementById('sinopsis').value
+            };
+            await updatePelicula(id, updatedData);
+            document.getElementById('peliculaForm').reset();
+        });
+
+        document.getElementById('borrarBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('buscarId').value;
+            await deletePelicula(id);
+            document.getElementById('peliculaForm').reset();
+        });
+
+        document.getElementById('buscarForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('buscarId').value;
+            if (id) {
+                await searchPeliculaById(id);
+            } else {
+                console.log("Please enter ID to search");
+            }
+        });
+
+        window.onload = getPeliculas;
+    </script>
+</head>
+<body>
+    <h1>PELICULAS CRUD</h1>
+    <button onclick="signOutUser()">Cerrar sesión</button>
 
     <h2>Buscar Película</h2>
     <form id="buscarForm">
@@ -332,5 +574,4 @@
         <tbody id="tablaPeliculasBody"></tbody>
     </table>
 </body>
-
 </html>
