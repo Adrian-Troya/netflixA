@@ -1,19 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Netflix</title>
-</head>
-<body>
-    <h1>Hola mi primera página</h1>
-    <nav>
-        <a href="index.html">Inicio</a>
-        <a href="conexion1.html">Página 1</a>
-        <a href="cone.html">Página 2</a>
-        <a href="producto.html">Página 3</a>
-        <a href="peliculas.html">Películas</a>
-    </nav>
+    <title>Inicio de Sesión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+        }
 
+        .login-container {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+    </style>
+    <script type="module">
+        // Importamos las funciones necesarias de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "API_KEY_HERE",
+            authDomain: "peliculas-ae2f1.firebaseapp.com",
+            projectId: "peliculas-ae2f1",
+            storageBucket: "peliculas-ae2f1.appspot.com",
+            messagingSenderId: "854647408875",
+            appId: "1:854647408875:web:39489056b967ada8b316ae",
+            measurementId: "G-EK15PN80TF"
+        };
+
+        // Inicializamos Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // Función para iniciar sesión con Google
+        async function login() {
+            try {
+                await signInWithPopup(auth, provider);
+                window.location.href = 'peliculas.html'; // Redirigir a la página de películas
+            } catch (error) {
+                console.error("Error during sign in:", error);
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Iniciar Sesión</h2>
+        <button onclick="login()">Iniciar Sesión con Google</button>
+    </div>
 </body>
+
 </html>
