@@ -71,27 +71,23 @@
 
     <script type="module">
         // Importamos las funciones necesarias de Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
-
-
-        // Configuración de Firebase
-        const firebaseConfig = {
-            apiKey: "API_KEY_HERE",
-            authDomain: "peliculas-ae2f1.firebaseapp.com",
-            projectId: "peliculas-ae2f1",
-            storageBucket: "peliculas-ae2f1.appspot.com",
-            messagingSenderId: "854647408875",
-            appId: "1:854647408875:web:39489056b967ada8b316ae",
-            measurementId: "G-EK15PN80TF"
-        };
-
-        // Inicializamos Firebase
+ // Inicializamos Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const peliculasCollection = collection(db, "peliculas");
         const auth = getAuth(app);
+
+        // Función para redirigir al usuario a la página de películas después del inicio de sesión exitoso
+        const redirectUser = () => {
+            window.location.href = 'peliculas.html';
+        };
+
+        // Verificar el estado de autenticación del usuario
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                redirectUser();
+            }
+        });
 
         // Evento para manejar el inicio de sesión con Gmail
         document.getElementById('googleLoginBtn').addEventListener('click', async () => {
@@ -103,6 +99,7 @@
                 alert('Ocurrió un error al iniciar sesión con Gmail. Por favor, inténtalo de nuevo.');
             }
         });
+
         // Evento para manejar el inicio de sesión con correo electrónico y contraseña
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -110,7 +107,7 @@
             const password = document.getElementById('password').value;
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                window.location.href = 'peliculas.html';
+                redirectUser();
             } catch (error) {
                 console.error(error.message);
                 alert('Ocurrió un error al iniciar sesión con correo electrónico y contraseña. Por favor, inténtalo de nuevo.');
@@ -269,9 +266,11 @@
     <h1>PELICULAS CRUD</h1>
 
     <h2>Buscar Película</h2>
-    <form id="buscarForm">
-        <input type="text" id="buscarId" placeholder="ID de la Película" required>
-        <button type="submit">Buscar</button>
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Correo electrónico" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        <button type="submit">Iniciar sesión</button>
+        <button id="googleLoginBtn">Iniciar sesión con Gmail</button>
     </form>
 
     <h2>Gestionar Película</h2>
