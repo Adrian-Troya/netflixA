@@ -8,7 +8,59 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="estiloLogin.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #74ABE2, #5563DE);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-form h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .login-form label {
+            color: #555;
+        }
+
+        .login-form .form-control {
+            border-radius: 5px;
+        }
+
+        .login-form .btn {
+            border-radius: 5px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .login-form .btn-info {
+            background-color: #5bc0de;
+            border-color: #46b8da;
+        }
+
+        .login-form .btn-danger {
+            background-color: #d9534f;
+            border-color: #d43f3a;
+        }
+
+        .login-form .btn-danger .bi {
+            margin-right: 5px;
+        }
+    </style>
 </head>
 
 <body>
@@ -21,8 +73,7 @@
             </div>
             <div class="mb-3">
                 <label for="contrasena" class="form-label">Contraseña:</label>
-                <input type="password" placeholder="Ingrese su Contraseña" id="contrasena" class="form-control"
-                    required>
+                <input type="password" placeholder="Ingrese su Contraseña" id="contrasena" class="form-control" required>
             </div>
             <div class="text-center">
                 <button type="button" class="btn btn-info" id="btnIniciar">Iniciar</button>
@@ -33,65 +84,67 @@
                 </button>
             </div>
         </div>
-        <!-- CON ESTOS SCRIPT TENGO COMUNICACIÓN CON FIREBASE Y GOOGLE -->
-        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-        <script>
-            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-            const firebaseConfig = {
-                apiKey: "AIzaSyA_Jgd3iinbMYU2GTJfesdqI3s09uHfjWw",
-                authDomain: "peliculas-ae2f1.firebaseapp.com",
-                projectId: "peliculas-ae2f1",
-                storageBucket: "peliculas-ae2f1.appspot.com",
-                messagingSenderId: "854647408875",
-                appId: "1:854647408875:web:39489056b967ada8b316ae",
-                measurementId: "G-EK15PN80TF"
-            };
+    </div>
 
-            // Initialize Firebase
-            firebase.initializeApp(firebaseConfig);
+    <!-- CON ESTOS SCRIPT TENGO COMUNICACIÓN CON FIREBASE Y GOOGLE -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script>
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyA_Jgd3iinbMYU2GTJfesdqI3s09uHfjWw",
+            authDomain: "peliculas-ae2f1.firebaseapp.com",
+            projectId: "peliculas-ae2f1",
+            storageBucket: "peliculas-ae2f1.appspot.com",
+            messagingSenderId: "854647408875",
+            appId: "1:854647408875:web:39489056b967ada8b316ae",
+            measurementId: "G-EK15PN80TF"
+        };
 
-            // Función para iniciar sesión con correo y contraseña
-            document.getElementById('btnIniciar').addEventListener('click', () => {
-                const email = document.getElementById('usuario').value;
-                const password = document.getElementById('contrasena').value;
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
 
-                firebase.auth().signInWithEmailAndPassword(email, password)
-                    .then((userCredential) => {
-                        // Signed in
-                        const user = userCredential.user;
-                        console.log('Inicio de sesión exitoso', user);
-                        alert('Inicio de sesión exitoso');
-                        // Redirige a index.html
-                        window.location.href = "index.html";
-                    })
-                    .catch((error) => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        console.error('Error de usuario o contraseña', errorCode, errorMessage);
-                        alert('Correo no válido: ' + errorMessage);
-                    });
-            });
+        // Función para iniciar sesión con correo y contraseña
+        document.getElementById('btnIniciar').addEventListener('click', () => {
+            const email = document.getElementById('usuario').value;
+            const password = document.getElementById('contrasena').value;
 
-            // Función para registrarse con Google
-            document.getElementById('btnRegistrar').addEventListener('click', () => {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                firebase.auth().signInWithPopup(provider)
-                    .then((result) => {
-                        const user = result.user;
-                        console.log('Registro e inicio de sesión con Google exitoso', user);
-                        alert('Registro e inicio de sesión con Google exitoso');
-                        // Redirige  a index.html
-                        window.location.href = "index.html";
-                    })
-                    .catch((error) => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        console.error('Error al registrarse con Google', errorCode, errorMessage);
-                        alert('Error al registrarse con Google: ' + errorMessage);
-                    });
-            });
-        </script>
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Signed in
+                    const user = userCredential.user;
+                    console.log('Inicio de sesión exitoso', user);
+                    alert('Inicio de sesión exitoso');
+                    // Redirige a index.html
+                    window.location.href = "index.html";
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.error('Error de usuario o contraseña', errorCode, errorMessage);
+                    alert('Correo no válido: ' + errorMessage);
+                });
+        });
+
+        // Función para registrarse con Google
+        document.getElementById('btnRegistrar').addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    console.log('Registro e inicio de sesión con Google exitoso', user);
+                    alert('Registro e inicio de sesión con Google exitoso');
+                    // Redirige  a index.html
+                    window.location.href = "index.html";
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.error('Error al registrarse con Google', errorCode, errorMessage);
+                    alert('Error al registrarse con Google: ' + errorMessage);
+                });
+        });
+    </script>
 </body>
 
 </html>
