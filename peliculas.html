@@ -10,6 +10,8 @@
             font-family: Arial, sans-serif;
             margin: 20px;
             padding: 20px;
+            border: black solid 2px;
+            background-color: rgb(183, 235, 237);
         }
 
         form {
@@ -53,19 +55,13 @@
         tbody tr:hover {
             background-color: yellow;
         }
-
-        body {
-            border: black solid 2px;
-            width: 100%;
-            background-color: rgb(183, 235, 237);
-        }
     </style>
 
     <script type="module">
         // Importamos las funciones necesarias de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
         // Configuración de Firebase
         const firebaseConfig = {
@@ -83,10 +79,11 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
+
         const peliculasCollection = collection(db, "peliculas");
 
         // Verificar estado de autenticación
-        onAuthStateChanged(auth, user => {
+        onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('login-container').style.display = 'none';
                 document.getElementById('app-container').style.display = 'block';
@@ -102,7 +99,7 @@
             try {
                 await signInWithPopup(auth, provider);
             } catch (error) {
-                console.error("Error during sign in:", error);
+                console.error("Error durante el inicio de sesión:", error);
             }
         }
 
@@ -111,35 +108,8 @@
             try {
                 await signOut(auth);
             } catch (error) {
-                console.error("Error during sign out:", error);
+                console.error("Error durante el cierre de sesión:", error);
             }
-        }
-
-        // Función para crear una nueva película en la colección
-        async function createPelicula(data) {
-            try {
-                const docRef = await addDoc(peliculasCollection, data);
-                console.log("Document written with ID: ", docRef.id);
-                await getPeliculas(); // Actualizamos la lista de películas
-            } catch (e) {
-                console.error("Error adding document: ", e);
-            }
-        }
-
-        // Función para actualizar una película existente
-        async function updatePelicula(id, updatedData) {
-            const peliculaDoc = doc(db, "peliculas", id);
-            await updateDoc(peliculaDoc, updatedData);
-            console.log("Document updated with ID: ", id);
-            await getPeliculas(); // Actualizamos la lista de películas
-        }
-
-        // Función para borrar una película de la colección
-        async function deletePelicula(id) {
-            const peliculaDoc = doc(db, "peliculas", id);
-            await deleteDoc(peliculaDoc);
-            console.log("Document deleted with ID: ", id);
-            await getPeliculas(); // Actualizamos la lista de películas
         }
 
         // Función para obtener y mostrar todas las películas
@@ -201,7 +171,39 @@
             document.getElementById('sinopsis').value = data.sinopsis;
         }
 
-        // Evento para manejar la inserción de una nueva película
+        // Función para crear una nueva película
+        async function createPelicula(data) {
+            try {
+                await addDoc(peliculasCollection, data);
+                getPeliculas(); // Actualizar la lista de películas
+            } catch (error) {
+                console.error("Error al crear la película:", error);
+            }
+        }
+
+        // Función para actualizar una película existente
+        async function updatePelicula(id, updatedData) {
+            try {
+                const peliculaDoc = doc(db, "peliculas", id);
+                await updateDoc(peliculaDoc, updatedData);
+                getPeliculas(); // Actualizar la lista de películas
+            } catch (error) {
+                console.error("Error al actualizar la película:", error);
+            }
+        }
+
+        // Función para borrar una película
+        async function deletePelicula(id) {
+            try {
+                const peliculaDoc = doc(db, "peliculas", id);
+                await deleteDoc(peliculaDoc);
+                getPeliculas(); // Actualizar la lista de películas
+            } catch (error) {
+                console.error("Error al borrar la película:", error);
+            }
+        }
+
+        // Eventos para manejar el formulario
         document.getElementById('insertarBtn').addEventListener('click', async (e) => {
             e.preventDefault();
             const data = {
@@ -219,7 +221,6 @@
             document.getElementById('peliculaForm').reset();
         });
 
-        // Evento para manejar la actualización de una película existente
         document.getElementById('editarBtn').addEventListener('click', async (e) => {
             e.preventDefault();
             const id = document.getElementById('buscarId').value;
@@ -238,7 +239,6 @@
             document.getElementById('peliculaForm').reset();
         });
 
-        // Evento para manejar el borrado de una película
         document.getElementById('borrarBtn').addEventListener('click', async (e) => {
             e.preventDefault();
             const id = document.getElementById('buscarId').value;
@@ -246,14 +246,13 @@
             document.getElementById('peliculaForm').reset();
         });
 
-        // Evento para manejar la búsqueda de una película por ID
         document.getElementById('buscarForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('buscarId').value;
             if (id) {
                 await searchPeliculaById(id);
             } else {
-                console.log("Please enter ID to search");
+                console.log("Por favor ingrese ID para buscar");
             }
         });
 
@@ -280,32 +279,31 @@
 
         <h2>Gestionar Película</h2>
         <form id="peliculaForm">
-            <br>
-            <label for="">Título: </label>
+            <label for="titulo">Título: </label>
             <input type="text" id="titulo" placeholder="Título" required>
             <br>
-            <label for="">Director: </label>
+            <label for="director">Director: </label>
             <input type="text" id="director" placeholder="Director" required>
             <br>
-            <label for="">Año de Estreno: </label>
+            <label for="año_estreno">Año de Estreno: </label>
             <input type="number" id="año_estreno" placeholder="Año de Estreno" required>
             <br>
-            <label for="">Género: </label>
+            <label for="genero">Género: </label>
             <input type="text" id="genero" placeholder="Género" required>
             <br>
-            <label for="">Duración en Minutos: </label>
+            <label for="duracion_minutos">Duración en Minutos: </label>
             <input type="number" id="duracion_minutos" placeholder="Duración en Minutos" required>
             <br>
-            <label for="">Idioma Original: </label>
+            <label for="idioma_original">Idioma Original: </label>
             <input type="text" id="idioma_original" placeholder="Idioma Original" required>
             <br>
-            <label for="">País de Produccion: </label>
+            <label for="pais_produccion">País de Producción: </label>
             <input type="text" id="pais_produccion" placeholder="País de Producción" required>
             <br>
-            <label for="">Calificación: </label>
+            <label for="calificacion_IMDB">Calificación: </label>
             <input type="number" step="0.1" id="calificacion_IMDB" placeholder="Calificación IMDB" required>
             <br>
-            <label for="">Sinopsis: </label>
+            <label for="sinopsis">Sinopsis: </label>
             <textarea id="sinopsis" placeholder="Sinopsis" required></textarea>
             <br>
             <button style="background-color: greenyellow; color: black;" id="insertarBtn">Insertar</button>
