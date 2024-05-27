@@ -1,2 +1,2 @@
 # netflixA
-Adrian Troya
+Adrian Troyaz
