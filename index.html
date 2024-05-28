@@ -207,8 +207,37 @@
                     <td>${data.calificacion_IMDB}</td>
                     <td>${data.sinopsis}</td>
                 `;
+                tr.addEventListener('click', () => fillForm(doc.id, data));
                 tablaPeliculasBody.appendChild(tr);
             });
+        }
+
+        // Llenar el formulario con los datos de la película seleccionada
+        function fillForm(id, data) {
+            document.getElementById('buscarId').value = id;
+            document.getElementById('titulo').value = data.titulo;
+            document.getElementById('director').value = data.director;
+            document.getElementById('año_estreno').value = data.año_estreno;
+            document.getElementById('genero').value = data.genero;
+            document.getElementById('duracion_minutos').value = data.duracion_minutos;
+            document.getElementById('idioma_original').value = data.idioma_original;
+            document.getElementById('pais_produccion').value = data.pais_produccion;
+            document.getElementById('calificacion_IMDB').value = data.calificacion_IMDB;
+            document.getElementById('sinopsis').value = data.sinopsis;
+        }
+
+        // Limpiar el formulario
+        function clearForm() {
+            document.getElementById('buscarId').value = '';
+            document.getElementById('titulo').value = '';
+            document.getElementById('director').value = '';
+            document.getElementById('año_estreno').value = '';
+            document.getElementById('genero').value = '';
+            document.getElementById('duracion_minutos').value = '';
+            document.getElementById('idioma_original').value = '';
+            document.getElementById('pais_produccion').value = '';
+            document.getElementById('calificacion_IMDB').value = '';
+            document.getElementById('sinopsis').value = '';
         }
 
         // Buscar una película por ID
@@ -219,15 +248,7 @@
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                document.getElementById('titulo').value = data.titulo;
-                document.getElementById('director').value = data.director;
-                document.getElementById('año_estreno').value = data.año_estreno;
-                document.getElementById('genero').value = data.genero;
-                document.getElementById('duracion_minutos').value = data.duracion_minutos;
-                document.getElementById('idioma_original').value = data.idioma_original;
-                document.getElementById('pais_produccion').value = data.pais_produccion;
-                document.getElementById('calificacion_IMDB').value = data.calificacion_IMDB;
-                document.getElementById('sinopsis').value = data.sinopsis;
+                fillForm(id, data);
             } else {
                 alert("No se encontró la película con ID: " + id);
             }
@@ -251,6 +272,7 @@
                 await addDoc(peliculasCollection, nuevaPelicula);
                 getPeliculas(); // Actualizar la tabla después de insertar
                 alert("Película insertada con éxito");
+                clearForm();
             } catch (error) {
                 console.error("Error insertando película:", error);
             }
@@ -276,6 +298,7 @@
                 await updateDoc(docRef, peliculaActualizada);
                 getPeliculas(); // Actualizar la tabla después de editar
                 alert("Película editada con éxito");
+                clearForm();
             } catch (error) {
                 console.error("Error editando película:", error);
             }
@@ -290,6 +313,7 @@
                 await deleteDoc(docRef);
                 getPeliculas(); // Actualizar la tabla después de borrar
                 alert("Película borrada con éxito");
+                clearForm();
             } catch (error) {
                 console.error("Error borrando película:", error);
             }
